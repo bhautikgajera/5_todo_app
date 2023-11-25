@@ -24,7 +24,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    print("Build Called =>>>>>>>>>>>>>>       ");
     final destination = HomePage.tabs
         .map((e) => NavigationDestination(icon: Icon(e.icon), label: e.name));
 
