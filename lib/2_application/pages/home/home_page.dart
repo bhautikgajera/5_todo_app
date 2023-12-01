@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/2_application/core/page_config.dart';
 import 'package:todo_app/2_application/pages/dashboard/dashboard_page.dart';
+import 'package:todo_app/2_application/pages/detail/todo_detail_page.dart';
+import 'package:todo_app/2_application/pages/home/block/navigation_todo_cubit.dart';
 import 'package:todo_app/2_application/pages/overview/overview_page.dart';
 import 'package:todo_app/2_application/pages/settings/settings_page.dart';
+
+class HomePageProvider extends StatelessWidget {
+  const HomePageProvider({super.key, required this.tab});
+
+  final String tab;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<NavigationTodoCubit>(
+      create: (context) => NavigationTodoCubit(),
+      child: HomePage(
+        tab: tab,
+      ),
+    );
+  }
+}
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required String tab})
@@ -110,6 +129,24 @@ class _HomePageState extends State<HomePage> {
             Breakpoints.mediumAndUp: SlotLayout.from(
               key: const Key("Secondary-Body"),
               builder: (context) {
+                if (widget.index == 1) {
+                  return BlocBuilder<NavigationTodoCubit,
+                      NavigationTodoCubitState>(builder: (context, state) {
+                    final isSecondBodydisplaied =
+                        Breakpoints.mediumAndUp.isActive(context);
+                    context
+                        .read<NavigationTodoCubit>()
+                        .selectedTodoCollectionChanged(
+                            isSecondBodyDisplayed: isSecondBodydisplaied,
+                            collectionId: state.selectedCollectionId);
+                    if (state.selectedCollectionId != null) {
+                      return TodoDetailPageProvider(
+                          key: UniqueKey(),
+                          collectionId: state.selectedCollectionId!);
+                    }
+                    return const Placeholder();
+                  });
+                }
                 return const SecondBody();
               },
             )
@@ -132,7 +169,6 @@ class SecondBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Second Body Called");
     return const Expanded(child: Placeholder());
   }
 }
