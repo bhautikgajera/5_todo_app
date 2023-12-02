@@ -25,8 +25,7 @@ class TodoEntryItemProvider extends StatelessWidget {
           collectionId: collectionId,
           entryId: entryId,
           updateTodoEntry: UpdateTodoEntry(toDoRepository: repository),
-          loadTodoEntry: LoadTodoEntry(toDoRepository: repository))
-        ..fetch(),
+          loadTodoEntry: LoadTodoEntry(toDoRepository: repository)),
       child: const TodoEntryItem(),
     );
   }

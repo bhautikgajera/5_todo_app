@@ -15,4 +15,6 @@ abstract class ToDoRepository {
 
   Future<Either<Failure, TodoEntry>> updateTodoEntry(
       {required CollectionId collectionId, required EntryId entryId});
+
+  Future<Either<Failure, bool>> createTodoCollection(ToDoCollection collection);
 }

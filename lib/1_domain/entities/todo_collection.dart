@@ -14,4 +14,12 @@ class ToDoCollection {
     return ToDoCollection(
         id: CollectionId(), title: "title", color: ToDoColor(colorIndex: 0));
   }
+
+  ToDoCollection copyWith({
+    String? title,
+    ToDoColor? color,
+  }) {
+    return ToDoCollection(
+        id: id, title: title ?? this.title, color: color ?? this.color);
+  }
 }

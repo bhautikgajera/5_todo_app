@@ -40,6 +40,7 @@ class ToDOOverviewLoaded extends StatelessWidget {
                 iconColor: item.color.color,
                 selectedColor: item.color.color,
                 leading: const Icon(Icons.circle),
+                title: Text(item.title),
               );
             },
           );
