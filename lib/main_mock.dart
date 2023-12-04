@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app/0_data/dataspurces/local/memory_locale_data_source.dart';
-import 'package:todo_app/0_data/repositories/todo_repository_local.dart';
+import 'package:todo_app/0_data/repositories/todo_repository_mock.dart';
 import 'package:todo_app/1_domain/repositories/todo_repository.dart';
 
 import '2_application/app/basic_app.dart';
 
 void main() {
   runApp(RepositoryProvider<ToDoRepository>(
-    create: (context) =>
-        ToDoRepositoryLocal(localDataSource: MomoryLocalDataSource()),
+    create: (context) => TodoRepositoryMock(),
     child: const BasicApp(),
   ));
 }

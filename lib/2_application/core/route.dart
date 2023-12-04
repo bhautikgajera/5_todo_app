@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/1_domain/entities/unique_id.dart';
 import 'package:todo_app/2_application/pages/create_todo_collection/create_todo_collection_page.dart';
+import 'package:todo_app/2_application/pages/create_todo_entry/create_todo_entry_page.dart';
 import 'package:todo_app/2_application/pages/detail/todo_detail_page.dart';
 import 'package:todo_app/2_application/pages/home/home_page.dart';
 import 'package:todo_app/2_application/pages/settings/settings_page.dart';
@@ -40,6 +41,12 @@ final route = GoRouter(
       path: "$basePath/${CreateTodoCollectionPage.pageConfig.name}",
       name: CreateTodoCollectionPage.pageConfig.name,
       builder: (context, state) => const CreateTodoCollectionPageProvider(),
+    ),
+    GoRoute(
+      path: "$basePath/${CreateTodoEntryPage.pageConfig.name}",
+      name: CreateTodoEntryPage.pageConfig.name,
+      builder: (context, state) => CreateTodoEntryPageProvider(
+          collectionId: state.extra as CollectionId),
     ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,

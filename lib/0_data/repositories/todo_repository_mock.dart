@@ -50,12 +50,17 @@ class TodoRepositoryMock implements ToDoRepository {
       CollectionId collectionId) {
     try {
       final startIndex = int.parse(collectionId.value) * 10;
-      final endIndex = startIndex + 10;
+      int endIndex = startIndex + 10;
+      if (todoEntries.length < endIndex) {
+        endIndex = todoEntries.length;
+      }
       final entryIds =
           todoEntries.sublist(startIndex, endIndex).map((e) => e.id).toList();
 
       return Future.delayed(
-          const Duration(milliseconds: 300), () => Right(entryIds));
+        const Duration(milliseconds: 300),
+        () => Right(entryIds),
+      );
     } on Exception catch (e) {
       return Future.value(Left(ServerFailure(stackTrace: e.toString())));
     }
@@ -77,9 +82,20 @@ class TodoRepositoryMock implements ToDoRepository {
   @override
   Future<Either<Failure, bool>> createTodoCollection(
       ToDoCollection collection) {
-    todoCollection.add(collection);
-
+    final collectionToAdd = ToDoCollection(
+        id: CollectionId.fromUniqueString(todoCollection.length.toString()),
+        title: collection.title,
+        color: collection.color);
+    todoCollection.add(collectionToAdd);
     return Future.delayed(
         const Duration(milliseconds: 300), () => const Right(true));
+  }
+
+  @override
+  Future<Either<Failure, bool>> createTodoEntry(_, TodoEntry entry) {
+    todoEntries.add(entry);
+
+    return Future.delayed(
+        const Duration(milliseconds: 250), () => const Right(true));
   }
 }
