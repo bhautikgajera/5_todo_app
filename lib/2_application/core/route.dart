@@ -1,10 +1,13 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/1_domain/entities/unique_id.dart';
 import 'package:todo_app/2_application/pages/create_todo_collection/create_todo_collection_page.dart';
 import 'package:todo_app/2_application/pages/create_todo_entry/create_todo_entry_page.dart';
+import 'package:todo_app/2_application/pages/dashboard/dashboard_page.dart';
 import 'package:todo_app/2_application/pages/detail/todo_detail_page.dart';
 import 'package:todo_app/2_application/pages/home/home_page.dart';
+import 'package:todo_app/2_application/pages/overview/overview_page.dart';
 import 'package:todo_app/2_application/pages/settings/settings_page.dart';
 
 import 'go_router_observer.dart';
@@ -21,6 +24,26 @@ final route = GoRouter(
   observers: [GoRouterObserver()],
   initialLocation: "$basePath/dashboard",
   routes: [
+    GoRoute(
+        path: "/login",
+        name: "login",
+        builder: (context, state) => SignInScreen(
+              actions: [
+                AuthStateChangeAction<SignedIn>((context, state) {
+                  context.pushNamed(HomePage.pageConfig.name,
+                      pathParameters: {"tab": OverViewPage.pageConfig.name});
+                }),
+                AuthStateChangeAction<UserCreated>((context, state) {
+                  context.pushNamed(HomePage.pageConfig.name, pathParameters: {
+                    "tab": DashboardPage.pageConfig.name,
+                  });
+                }),
+              ],
+            )),
+    GoRoute(
+        path: "/profile",
+        name: "profile",
+        builder: (context, state) => const ProfileScreen()),
     GoRoute(
       path: "$basePath/${SettingsPage.pageConfig.name}",
       name: SettingsPage.pageConfig.name,

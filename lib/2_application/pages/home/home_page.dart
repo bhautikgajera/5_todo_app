@@ -3,10 +3,10 @@ import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/2_application/core/page_config.dart';
-import 'package:todo_app/2_application/pages/create_todo_collection/create_todo_collection_page.dart';
 import 'package:todo_app/2_application/pages/dashboard/dashboard_page.dart';
 import 'package:todo_app/2_application/pages/detail/todo_detail_page.dart';
 import 'package:todo_app/2_application/pages/home/block/navigation_todo_cubit.dart';
+import 'package:todo_app/2_application/pages/home/components/login_button.dart';
 import 'package:todo_app/2_application/pages/overview/overview_page.dart';
 import 'package:todo_app/2_application/pages/settings/settings_page.dart';
 
@@ -47,6 +47,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late final themeData = Theme.of(context);
 
+  late void Function() bodyRefresher;
+
   @override
   Widget build(BuildContext context) {
     final destination = HomePage.tabs
@@ -65,10 +67,15 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(HomePage.tabs[widget.index].name),
                     const Spacer(),
-                    IconButton(
-                      onPressed: () =>
-                          context.pushNamed(SettingsPage.pageConfig.name),
-                      icon: Icon(SettingsPage.pageConfig.icon),
+                    Row(
+                      children: [
+                        const SignInButton(),
+                        IconButton(
+                          onPressed: () =>
+                              context.pushNamed(SettingsPage.pageConfig.name),
+                          icon: Icon(SettingsPage.pageConfig.icon),
+                        ),
+                      ],
                     )
                   ],
                 );
@@ -79,12 +86,7 @@ class _HomePageState extends State<HomePage> {
             Breakpoints.mediumAndUp: SlotLayout.from(
               key: const Key("primary-navigation-medium"),
               builder: (context) => AdaptiveScaffold.standardNavigationRail(
-                leading: IconButton(
-                  onPressed: () {
-                    context.pushNamed(CreateTodoCollectionPage.pageConfig.name);
-                  },
-                  icon: const Icon(Icons.add_task),
-                ),
+                leading: const SignInButton(),
                 trailing: IconButton(
                   onPressed: () =>
                       context.pushNamed(SettingsPage.pageConfig.name),
@@ -128,7 +130,17 @@ class _HomePageState extends State<HomePage> {
                 key: const Key(
                   "Primary-Body",
                 ),
-                builder: (context) => HomePage.tabs[widget.index].child,
+                builder: (context) =>
+                    StatefulBuilder(builder: (context, setState) {
+                  bodyRefresher = () {
+                    setState(() {
+                      print("Body Refresher Called");
+                    });
+                  };
+                  return Center(
+                      key: UniqueKey(),
+                      child: HomePage.tabs[widget.index].child);
+                }),
               )
             },
           ),

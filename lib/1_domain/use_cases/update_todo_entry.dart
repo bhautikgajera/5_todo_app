@@ -10,9 +10,13 @@ class UpdateTodoEntry extends UseCase<TodoEntry, TodoEntryIdsParam> {
   @override
   Future<Either<Failure, TodoEntry>> call(TodoEntryIdsParam params) async {
     try {
-      final loadedEntry = await toDoRepository.updateTodoEntry(
-          collectionId: params.collectionId, entryId: params.entryId);
-      return loadedEntry;
+      final entry = await toDoRepository.readTodoEntry(
+          params.collectionId, params.entryId);
+      return entry.fold((failure) => Left(failure), (todoEntry) async {
+        final loadedEntry = await toDoRepository.updateTodoEntry(
+            collectionId: params.collectionId, entry: todoEntry);
+        return loadedEntry;
+      });
     } on Exception catch (e) {
       return Left(ServerFailure(stackTrace: e.toString()));
     }

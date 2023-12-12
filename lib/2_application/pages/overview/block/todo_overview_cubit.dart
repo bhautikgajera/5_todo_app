@@ -20,7 +20,9 @@ class TodoOverViewCubit extends Cubit<TodoOverViewCubitState> {
 
     final collection = await collectionFuture;
 
-    collection.fold((left) => emit(TodoOverviewStateError()),
-        (right) => emit(TodoOverviewStateLoaded(right)));
+    collection.fold((left) {
+      print("Error State >>>>>>>>>>>>>>>>>>>>>>>.${left}");
+      emit(TodoOverviewStateError());
+    }, (right) => emit(TodoOverviewStateLoaded(right)));
   }
 }

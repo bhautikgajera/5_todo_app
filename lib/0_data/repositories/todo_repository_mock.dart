@@ -68,8 +68,8 @@ class TodoRepositoryMock implements ToDoRepository {
 
   @override
   Future<Either<Failure, TodoEntry>> updateTodoEntry(
-      {required CollectionId collectionId, required EntryId entryId}) {
-    final index = todoEntries.indexWhere((element) => element.id == entryId);
+      {required CollectionId collectionId, required TodoEntry entry}) {
+    final index = todoEntries.indexWhere((element) => element.id == entry.id);
 
     final entryToUpdate = todoEntries[index];
 
